@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .txt{
+            color:black;
+            overflow: hidden;
+            position: relative;
+        }
+        body{
+            background-image: url("img/preview.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #hea{
+			position:relative;
+			width:100%;
+			background:#f7f7f7;
+			box-shadow:0px 1px 3px rgba(0,0,0,0.2);
+		}
+        img{
+            position: absolute;
+        }
+        .close1{
+            position: absolute;
+            top: 0%;
+            right: 0.5%;
+        }
+        #time{
+            position:absolute;
+            left: 30%;
+            top: 10%;
+            width: 188px;
+            height: 21px;
+            border-style: none;
+            background: #0c99f0;
+            z-index: 3;
+        }
+        img{
+            height: 20px;
+            width: 20px;
+        }
+        .box{
+            position:absolute;
+            left: 30%;
+            top: 10%;
+            width: 500px;
+            height: 500px;
+            border-color: grey;
+            border-style: solid;
+            border-width: 1.5px;
+            background: -webkit-linear-gradient(top left, #0c99f0, #acb6e5);
+        }
+        #grey{
+            background: -webkit-linear-gradient(top left, #0c99f0, #42d6ff);
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            z-index: 2;
+        }
+        #inside{
+            width: 500px;
+            height: 500px;
+            position: relative;
+            z-index: 1;
+        }
+        .button{
+            position: absolute;
+            left: 35%;
+            top: 16%;
+        }
+        .input_box{
+            position: absolute;
+            left: 25%;
+            top: 10%;
+        }
+        button{
+            padding: 5px;
+            border-radius: 10%;
+        }
+        #rec{
+            overflow: auto;
+            visibility: hidden;
+            position: absolute;
+            left: 22%;
+            top: 25%;
+            width:250px;
+            height:300px;
+        }
+    </style>
+</head>
+<body>
+    <header id = "hea">
+        <div class = "txt">            
+            欢迎使用加法考试模拟器！
+        </div>
+        <div class="close1">
+            <button id = "btn1" style="height: 20px;padding: 0%;">关闭</button>
+        </div>
+    </header>
+    
+    <div id="time">
+        <img src="img/0.jpg" />
+        00
+		<img src="img/8.jpg" />
+		00时
+        <img src="img/1.jpg" />
+        00
+		<img src="img/5.jpg" />
+		00分
+        <img src="img/0.jpg" />
+        00
+		<img src="img/9.jpg" />
+		00秒
+	</div>
+    <div class = "box">
+        <div id = "grey">
+            
+            <div class="input_box">
+                <span style="font-size:13px ;">请设置答题时间</span><input id="utime" type="text" name="time" style ="border: none; outline: none; height: 19px;">
+            </div>
+            <div class="button">
+                <button id = "start">Start</button>
+                <button id = "record">My Record</button>
+            </div>
+            <div id = "rec">
+                
+            </div>
+        </div>
+        <div id = "inside">
+            <div style="position: absolute;top: 10%; left: 10%;"><span>倒计时：</span></div>
+            <div style="position: absolute;top: 10%; right: 10%;"><span id = "poi">得分：</span></div>
+            <div style="position: absolute;top: 20%; left: 10%;"><span></span><input id = "ans"></div>
+            <br>
+            <div style="position: absolute;top: 30%; left: 10%;"><button id = "sub">提交答案</button></div>
+        </div>
+    </div>
+</body>
+<script>
+    var txt = document.getElementsByClassName("txt");
+    var hea = document.getElementById("hea")
+    txt[0].style.marginLeft = "0";
+    var inter = setInterval(function(){
+        var left = parseInt(txt[0].style.marginLeft)
+        txt[0].style.marginLeft = (left+1) + "px";
+        if(txt[0].style.marginLeft=="1285px" ){
+            txt[0].style.marginLeft = "0";
+        }
+    },10)
+    var btn1 = document.getElementById("btn1");
+    btn1.onclick = function(){
+        hea.style.visibility = "hidden";
+    }
+
+    var start = document.getElementById("start");
+    var record = document.getElementById("record");
+    var ans = document.getElementById("ans");
+    var rec = document.getElementById("rec");
+    var temp1;
+    var temp2;
+    var numText;
+    var numRec = "";
+    var result = "结果：错";
+    var score = 0 ;
+    var sco;
+    var time;
+    start.onclick = function(){
+        if( utime.value == "" ){
+            alert("请输入时间")
+            return 0;
+        }
+        if( isNaN(utime.value) ){
+            alert("请输入正确的的时间")
+            return 0;
+        }
+        grey.style.visibility="hidden";
+        ans.focus();
+
+        rec.innerHTML = "";
+        numRec = "";
+        rec.style.visibility = "hidden"
+
+        ans.value = "";
+        score = 0;
+        
+
+        //生成随机题目
+        temp1 = Math.floor(Math.random() * 101);
+        temp2 = Math.floor(Math.random() * 101);
+        numText = document.createTextNode(temp1 + " " + "+" + " " + temp2 + " " + "=" + " ");
+        ans.parentElement.insertBefore( numText, ans );
+
+        sco = document.createTextNode(score);
+        poi.parentElement.appendChild(sco);
+
+
+        time = utime.value;
+        var Node = document.createElement("span");        
+        var xmText = document.createTextNode(time + "s");
+        sub.parentElement.parentElement.firstElementChild.appendChild(Node);
+        var timeId = setInterval(function(){
+            time--;
+            Node.innerText = time + "s";
+            if(time <= 0){
+                grey.style.visibility="visible";
+                sub.parentElement.parentElement.firstElementChild.removeChild(Node);
+                poi.parentElement.removeChild(sco);
+                ans.parentElement.removeChild(numText);
+                
+                rec.style.visibility = "hidden";
+                
+            }
+        }, 1000);
+        utime.value ="";
+
+    }
+
+    sub.onclick = function(){
+        //验证答案是否正确判断正误 正确得分加10
+        //更换题目
+        //答题记录
+        if ( ans.value == temp2 + temp1 ){
+            score+=10;
+            result = "结果：对"
+        }
+
+        ans.parentElement.removeChild(numText);
+        temp1 = Math.floor(Math.random() * 101);
+        temp2 = Math.floor(Math.random() * 101);
+        numText = document.createTextNode(temp1 + " " + "+" + " " + temp2 + " " + "=" + " ");
+        ans.parentElement.insertBefore( numText, ans );
+
+        poi.parentElement.removeChild(sco);
+        sco = document.createTextNode(score);
+        poi.parentElement.appendChild(sco);
+
+        numRec +="<p>" + temp1 + "+" +  temp2 + "=" + ans.value + "<span style = 'position:absolute; right:1%'>" + result + "</span></p>" ;
+        rec.innerHTML = numRec;
+        result = "结果：错"
+
+        ans.focus();
+        ans.value = "";
+
+
+
+    }
+
+    record.onclick = function(){
+        //  hide
+        rec.style.visibility = "visible";
+    }
+</script>
+<script type="text/javascript">
+	setInterval(function(){
+		var now = new Date();
+		var h = now.getHours();
+		var m = now.getMinutes();
+		var s = now.getSeconds();
+		
+		var _date = [
+			h<10?0:Math.floor(h/10), h%10,
+			m<10?0:Math.floor(m/10), m%10,
+			s<10?0:Math.floor(s/10), s%10
+			]
+		console.log(_date);
+		
+		var imgs = document.getElementsByTagName("img");
+		for(var i=0; i<imgs.length; i++){
+			imgs[i].src = "img/"+_date[i]+".jpg";
+		}
+	}, 1000);
+</script>
+</html>
